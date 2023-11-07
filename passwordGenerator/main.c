@@ -17,7 +17,7 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
     }
 
     for (int j = 1; j <= numPasswords; j++) {
-        fprintf(file, "%d: ", j); // Include a password number
+        fprintf(file, "%d: ", j);
         for (int i = 0; i < passwordLength; i++) {
             char randomChar = generateRandomCharacter();
             if (rand() % 2 == 0) {
@@ -25,13 +25,12 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
             }
             fputc(randomChar, file);
         }
-        fputc('\n', file); // Separate passwords with a newline
+        fputc('\n', file);
     }
 
     fclose(file);
     printf("%d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
 
-    // Open the text document (platform-dependent, this example is for Windows)
 #ifdef _WIN32
     system("notepad passwords.txt");
 #else
