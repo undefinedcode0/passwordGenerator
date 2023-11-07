@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    srand((unsigned)(time(NULL) + clock()));
+    srand((unsigned)(time(NULL)));
 
     generateAndSavePasswords(numPasswords, passwordLength);
 
