@@ -39,22 +39,35 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        printf("Usage: %s <numPasswords> <passwordLength>\n", argv[0]);
+    if (argc == 2) {
+        if (strcmp(argv[1], "email") == 0) {
+            generateAndSavePasswords(15, 30);
+        }
+        else if (strcmp(argv[1], "account") == 0) {
+            generateAndSavePasswords(15, 50);
+        }
+        else {
+            printf("Invalid input. Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
+            return 1;
+        }
+    }
+    else if (argc == 3) {
+        int numPasswords = atoi(argv[1]);
+        int passwordLength = atoi(argv[2]);
+
+        if (numPasswords <= 0 || passwordLength <= 0) {
+            printf("Please provide a valid number of passwords and password length.\n");
+            return 1;
+        }
+
+        srand((unsigned)time(NULL));
+
+        generateAndSavePasswords(numPasswords, passwordLength);
+    }
+    else {
+        printf("Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
         return 1;
     }
-
-    int numPasswords = atoi(argv[1]);
-    int passwordLength = atoi(argv[2]);
-
-    if (numPasswords <= 0 || passwordLength <= 0) {
-        printf("Please provide a valid number of passwords and password length.\n");
-        return 1;
-    }
-
-    srand((unsigned)(time(NULL)));
-
-    generateAndSavePasswords(numPasswords, passwordLength);
 
     return 0;
 }
