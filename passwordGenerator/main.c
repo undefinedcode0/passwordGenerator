@@ -3,7 +3,7 @@
 #include <time.h>
 
 char generateRandomCharacter() {
-    const char characters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()?=";
+    const char characters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789!@#$%&*()?=";
     int randomIndex = rand() % (sizeof(characters) - 1);
     return characters[randomIndex];
 }
