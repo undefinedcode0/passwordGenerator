@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sodium.h>
 #include <ctype.h>
 
 char generateRandomCharacter() {
     // Added more symbols to the character set
     const char characters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
+
     int randomIndex = rand() % (sizeof(characters) - 1);
     return characters[randomIndex];
 }
