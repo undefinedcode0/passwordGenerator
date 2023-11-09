@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sodium.h>
 #include <ctype.h>
 
 char generateRandomCharacter() {
-    // Added more symbols to the character set
     const char characters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
-
-    int randomIndex = rand() % (sizeof(characters) - 1);
-    return characters[randomIndex];
+    return characters[randombytes_uniform(sizeof(characters) - 1)];
 }
 
 void generateAndSavePasswords(int numPasswords, int passwordLength) {
@@ -19,22 +17,33 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 
     for (int j = 1; j <= numPasswords; j++) {
         fprintf(file, "%d: ", j);
+
+        // Create an array to track used characters
         int used[256] = { 0 };
+
+        // Initialize the previous character case to none
         int prevCase = 0; // 0 for none, 1 for upper, 2 for lower
+
         for (int i = 0; i < passwordLength; i++) {
             char randomChar = generateRandomCharacter();
 
+            // Keep generating characters until a new one is found
             while (used[tolower(randomChar)]) {
                 randomChar = generateRandomCharacter();
             }
 
+            // Ensure that consecutive uppercase or lowercase characters are not generated
             while ((isupper(randomChar) && prevCase == 1) || (islower(randomChar) && prevCase == 2)) {
                 randomChar = generateRandomCharacter();
             }
 
+            // Write the character to the file
             fputc(randomChar, file);
+
+            // Mark the character as used
             used[tolower(randomChar)] = 1;
 
+            // Update the previous character case
             if (isupper(randomChar)) {
                 prevCase = 1;
             }
@@ -45,10 +54,14 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
                 prevCase = 0;
             }
         }
+
+        // Write a newline character after each password
         fputc('\n', file);
     }
 
+    // Close the file
     fclose(file);
+
     printf("%d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
 
 #ifdef _WIN32
@@ -59,17 +72,18 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 }
 
 int main(int argc, char* argv[]) {
+    // Initialize the sodium library
     if (sodium_init() < 0) {
-        // panic! the library couldn't be initialized, it is not safe to use
         printf("Error initializing sodium library\n");
         return 1;
     }
 
+    // Check the command-line arguments
     if (argc == 2) {
-        if (sodium_memcmp(argv[1], "email", 5) == 0) {
+        if (strcmp(argv[1], "email") == 0) {
             generateAndSavePasswords(15, 40);
         }
-        else if (sodium_memcmp(argv[1], "account", 7) == 0) {
+        else if (strcmp(argv[1], "account") == 0) {
             generateAndSavePasswords(15, 60);
         }
         else {
