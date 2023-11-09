@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sodium.h>
+#include <ctype.h>
 
 char generateRandomCharacter() {
-    const char characters[] = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*()?=";
+    // Added more symbols to the character set
+    const char characters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
     int randomIndex = rand() % (sizeof(characters) - 1);
     return characters[randomIndex];
 }
@@ -17,12 +19,31 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 
     for (int j = 1; j <= numPasswords; j++) {
         fprintf(file, "%d: ", j);
+        int used[256] = { 0 };
+        int prevCase = 0; // 0 for none, 1 for upper, 2 for lower
         for (int i = 0; i < passwordLength; i++) {
             char randomChar = generateRandomCharacter();
-            if (rand() % 2 == 0) {
-                randomChar = (randomChar >= 'a' && randomChar <= 'z') ? (randomChar - 'a' + 'A') : randomChar;
+
+            while (used[tolower(randomChar)]) {
+                randomChar = generateRandomCharacter();
             }
+
+            while ((isupper(randomChar) && prevCase == 1) || (islower(randomChar) && prevCase == 2)) {
+                randomChar = generateRandomCharacter();
+            }
+
             fputc(randomChar, file);
+            used[tolower(randomChar)] = 1;
+
+            if (isupper(randomChar)) {
+                prevCase = 1;
+            }
+            else if (islower(randomChar)) {
+                prevCase = 2;
+            }
+            else {
+                prevCase = 0;
+            }
         }
         fputc('\n', file);
     }
@@ -38,12 +59,18 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 }
 
 int main(int argc, char* argv[]) {
+    if (sodium_init() < 0) {
+        // panic! the library couldn't be initialized, it is not safe to use
+        printf("Error initializing sodium library\n");
+        return 1;
+    }
+
     if (argc == 2) {
-        if (strcmp(argv[1], "email") == 0) {
-            generateAndSavePasswords(15, 30);
+        if (sodium_memcmp(argv[1], "email", 5) == 0) {
+            generateAndSavePasswords(15, 40);
         }
-        else if (strcmp(argv[1], "account") == 0) {
-            generateAndSavePasswords(15, 50);
+        else if (sodium_memcmp(argv[1], "account", 7) == 0) {
+            generateAndSavePasswords(15, 60);
         }
         else {
             printf("Invalid input. Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
@@ -58,8 +85,6 @@ int main(int argc, char* argv[]) {
             printf("Please provide a valid number of passwords and password length.\n");
             return 1;
         }
-
-        srand((unsigned)time(NULL));
 
         generateAndSavePasswords(numPasswords, passwordLength);
     }
