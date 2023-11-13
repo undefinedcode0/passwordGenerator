@@ -2,10 +2,20 @@
 #include <stdlib.h>
 #include <sodium.h>
 #include <ctype.h>
+#include <string.h>
 
 char generateRandomCharacter() {
-    const char characters[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
-    return characters[randombytes_uniform(sizeof(characters) - 1)];
+    const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const char specialCharacters[] = "!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
+
+    if (randombytes_uniform(100) < 80) {
+        // 80% chance of generating an alphanumeric character
+        return alphanumeric[randombytes_uniform(sizeof(alphanumeric) - 1)];
+    }
+    else {
+        // 20% chance of generating a special character
+        return specialCharacters[randombytes_uniform(sizeof(specialCharacters) - 1)];
+    }
 }
 
 void generateAndSavePasswords(int numPasswords, int passwordLength) {
@@ -18,10 +28,7 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
     for (int j = 1; j <= numPasswords; j++) {
         fprintf(file, "%d: ", j);
 
-        // Create an array to track used characters
         int used[256] = { 0 };
-
-        // Initialize the previous character case to none
         int prevCase = 0; // 0 for none, 1 for upper, 2 for lower
 
         for (int i = 0; i < passwordLength; i++) {
@@ -32,18 +39,14 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
                 randomChar = generateRandomCharacter();
             }
 
-            // Ensure that consecutive uppercase or lowercase characters are not generated
             while ((isupper(randomChar) && prevCase == 1) || (islower(randomChar) && prevCase == 2)) {
                 randomChar = generateRandomCharacter();
             }
 
-            // Write the character to the file
             fputc(randomChar, file);
 
-            // Mark the character as used
             used[tolower(randomChar)] = 1;
 
-            // Update the previous character case
             if (isupper(randomChar)) {
                 prevCase = 1;
             }
@@ -63,12 +66,6 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
     fclose(file);
 
     printf("%d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
-
-#ifdef _WIN32
-    system("notepad passwords.txt");
-#else
-    printf("To open the file, use an appropriate command on your operating system.\n");
-#endif
 }
 
 int main(int argc, char* argv[]) {
