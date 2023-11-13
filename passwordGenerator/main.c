@@ -58,24 +58,21 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
             }
         }
 
-        // Write a newline character after each password
         fputc('\n', file);
     }
 
-    // Close the file
     fclose(file);
 
     printf("%d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
 }
 
 int main(int argc, char* argv[]) {
-    // Initialize the sodium library
+
     if (sodium_init() < 0) {
         printf("Error initializing sodium library\n");
         return 1;
     }
 
-    // Check the command-line arguments
     if (argc == 2) {
         if (strcmp(argv[1], "email") == 0) {
             generateAndSavePasswords(15, 40);
