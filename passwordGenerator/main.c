@@ -64,6 +64,12 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
     fclose(file);
 
     printf("%d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
+
+#ifdef _WIN32
+    system("notepad passwords.txt");
+#else
+    printf("To open the file, use an appropriate command on your operating system.\n");
+#endif
 }
 
 int main(int argc, char* argv[]) {
