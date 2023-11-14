@@ -6,7 +6,7 @@
 
 char generateRandomCharacter() {
     const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    const char specialCharacters[] = "!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
+    const char specialCharacters[] = "!@#$%&*?=";
 
     if (randombytes_uniform(100) < 80) {
         // 80% chance of generating an alphanumeric character
