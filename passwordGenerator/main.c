@@ -4,16 +4,19 @@
 #include <ctype.h>
 #include <string.h>
 
+#define ALPHANUMERIC_PERCENT 80.5
+#define SPECIAL_PERCENT 20.5
+
 char generateRandomCharacter() {
     const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    const char specialCharacters[] = "!@#$%&*()?=~^+_-[]{}<>/|`.,;:'";
+    const char specialCharacters[] = "!@#$%&*?=";
 
-    if (randombytes_uniform(100) < 80) {
-        // 80% chance of generating an alphanumeric character
+    double randomValue = (double)randombytes_uniform(1000) / 10.0;  // Generate a random value between 0 and 100.
+
+    if (randomValue < ALPHANUMERIC_PERCENT) {
         return alphanumeric[randombytes_uniform(sizeof(alphanumeric) - 1)];
     }
     else {
-        // 20% chance of generating a special character
         return specialCharacters[randombytes_uniform(sizeof(specialCharacters) - 1)];
     }
 }
