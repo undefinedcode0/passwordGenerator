@@ -84,10 +84,10 @@ int main(int argc, char* argv[]) {
 
     if (argc == 2) {
         if (strcmp(argv[1], "email") == 0) {
-            generateAndSavePasswords(15, 40);
+            generateAndSavePasswords(3, 40);
         }
         else if (strcmp(argv[1], "account") == 0) {
-            generateAndSavePasswords(15, 60);
+            generateAndSavePasswords(3, 60);
         }
         else {
             printf("Invalid input. Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
