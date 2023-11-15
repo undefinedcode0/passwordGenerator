@@ -2,6 +2,7 @@
 
 # YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS OVER 5 
 
+## I'll try to include libsodium here
 
 ## A powerful password generator.
 ### It basically takes some letters from a list and randomizes them. 
