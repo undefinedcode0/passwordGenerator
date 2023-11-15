@@ -1,4 +1,8 @@
 # passwordGenerator
+
+# YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR NEWER AND 
+
+
 ## A powerful password generator.
 ### It basically takes some letters from a list and randomizes them. 
 ### But it first takes the first and second argument inputted by the user to determine the amount of passwords generated and length., and it has a chance to capatilize the letter or not. After this it will print the final result.
