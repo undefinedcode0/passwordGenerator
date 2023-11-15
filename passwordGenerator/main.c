@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sodium.h>
-#include <ctype.h>
-#include <string.h>
-
-#define ALPHANUMERIC_PERCENT 80.5
-#define SPECIAL_PERCENT 20.5
+#include "def.h"
 
 char generateRandomCharacter() {
     const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
