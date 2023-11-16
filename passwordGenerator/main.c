@@ -1,4 +1,13 @@
-#include "def.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <sodium.h>
+#include <windows.h>
+
+
+#define ALPHANUMERIC_PERCENT 80
+#define SPECIAL_PERCENT 20
 
 char generateRandomCharacter() {
     const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -30,8 +39,22 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
         for (int i = 0; i < passwordLength; i++) {
             char randomChar = generateRandomCharacter();
 
-            // Keep generating characters until a new one is found
+            int attempts = 0;
             while (used[tolower(randomChar)]) {
+                // Limit the number of attempts to avoid infinite loop
+                if (attempts++ > 1000) {
+                    fprintf(stderr, "Error: Unable to generate a unique character.\n");
+
+                    /* Debug code for testing purposes
+                     * 
+                     * char buf[30];
+                     * sprintf(buf, "sobber: %d", GetLastError());
+                     * printf(buf);
+                    */
+
+                    fclose(file);
+                    return;
+                }
                 randomChar = generateRandomCharacter();
             }
 
@@ -80,7 +103,7 @@ int main(int argc, char* argv[]) {
             generateAndSavePasswords(3, 40);
         }
         else if (strcmp(argv[1], "account") == 0) {
-            generateAndSavePasswords(3, 60);
+            generateAndSavePasswords(3, 50);
         }
         else {
             printf("Invalid input. Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
