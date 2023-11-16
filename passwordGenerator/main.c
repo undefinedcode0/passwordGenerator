@@ -5,7 +5,6 @@
 #include <sodium.h>
 #include <windows.h>
 
-
 #define ALPHANUMERIC_PERCENT 80
 #define SPECIAL_PERCENT 20
 
