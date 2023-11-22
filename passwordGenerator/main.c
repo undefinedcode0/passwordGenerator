@@ -6,12 +6,12 @@
 #include <windows.h>
 #include <time.h>
 
-#define ALPHANUMERIC_PERCENT 80
-#define SPECIAL_PERCENT 20
+#define ALPHANUMERIC_PERCENT 90
+#define SPECIAL_PERCENT 10
 
 char generateRandomCharacter() {
     const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    const char specialCharacters[] = "!@#$&*?=";
+    const char specialCharacters[] = "!@#$&*";
 
     unsigned char randomChar;
     randombytes_buf(&randomChar, sizeof(randomChar));
@@ -26,7 +26,10 @@ char generateRandomCharacter() {
     }
 }
 
-void generateAndSavePasswords(int numPasswords, int passwordLength) {
+static void generateAndSavePasswords(
+    int numPasswords, 
+    int passwordLength
+) {
     FILE* file = fopen("passwords.txt", "w");
     if (file == NULL) {
         perror("Error opening passwords.txt");
@@ -41,20 +44,10 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 
         for (int i = 0; i < passwordLength; i++) {
             char randomChar;
-            int attempts = 0;
 
             do {
                 randomChar = generateRandomCharacter();
 
-                if (++attempts > 200) {
-                    fprintf(stderr, "Error: Unable to generate a unique character.\n");
-
-                    char buffer[30];
-                    sprintf(buffer, "Error Code : %d", GetLastError());
-                    printf(buffer);
-                    fclose(file);
-                    return;
-                }
             } while (used[tolower((unsigned char)randomChar)] ||
                 (i > 0 && randomChar == used[i - 1]) ||
                 (i > 1 && randomChar == used[i - 2]));
@@ -83,7 +76,11 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 #endif
 }
 
-int main(int argc, char* argv[]) {
+int main(
+    int numPasswords, 
+    int passwordLength
+) {
+
     if (sodium_init() < 0) {
         fprintf(stderr, "Error initializing sodium library\n");
         return 1;
@@ -91,33 +88,18 @@ int main(int argc, char* argv[]) {
 
     randombytes_stir();
 
-    if (argc == 2) {
-        if (strcmp(argv[1], "email") == 0) {
-            generateAndSavePasswords(3, 40);
-        }
-        else if (strcmp(argv[1], "account") == 0) {
-            generateAndSavePasswords(3, 50);
-        }
-        else {
-            fprintf(stderr, "Invalid input. Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
-            return 1;
-        }
-    }
-    else if (argc == 3) {
-        int numPasswords = atoi(argv[1]);
-        int passwordLength = atoi(argv[2]);
+    printf("number of passwords?: ");
+    scanf("%d", &numPasswords);
 
-        if (numPasswords <= 0 || passwordLength <= 0) {
-            fprintf(stderr, "Please provide a valid number of passwords and password length.\n");
-            return 1;
-        }
+    printf("length of passwords?: ");
+    scanf("%d", &passwordLength);
 
-        generateAndSavePasswords(numPasswords, passwordLength);
-    }
-    else {
-        fprintf(stderr, "Usage: %s <numPasswords> <passwordLength> OR %s email OR %s account\n", argv[0], argv[0], argv[0]);
+    if (numPasswords <= 0 || passwordLength <= 0) {
+        fprintf(stderr, "Please provide a valid number of passwords and password length.\n");
         return 1;
     }
+
+    generateAndSavePasswords(numPasswords, passwordLength);
 
     return 0;
 }
