@@ -5,9 +5,7 @@
 #include <sodium.h>
 #include <windows.h>
 #include <time.h>
-
-#define ALPHANUMERIC_PERCENT 90
-#define SPECIAL_PERCENT 10
+#define PERCENT 95
 
 char generateRandomCharacter() {
     const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -18,7 +16,7 @@ char generateRandomCharacter() {
 
     double randomValue = (double)randomChar / (double)UCHAR_MAX * 100.0;
 
-    if (randomValue < ALPHANUMERIC_PERCENT) {
+    if (randomValue < PERCENT) {
         return alphanumeric[randombytes_uniform(sizeof(alphanumeric) - 1)];
     }
     else {
@@ -26,8 +24,8 @@ char generateRandomCharacter() {
     }
 }
 
-static void generateAndSavePasswords(
-    int numPasswords, 
+void generateAndSavePasswords(
+    int numPasswords,
     int passwordLength
 ) {
     FILE* file = fopen("passwords.txt", "w");
@@ -67,35 +65,44 @@ static void generateAndSavePasswords(
 
     fclose(file);
 
-    printf("%d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
+    printf("[~] %d passwords of length %d generated and saved to passwords.txt\n", numPasswords, passwordLength);
 
 #ifdef _WIN32
     system("notepad passwords.txt");
+    system("pause");
 #else
     printf("To open the file, use an appropriate command on your operating system.\n");
 #endif
 }
 
 int main(
-    int numPasswords, 
+    int numPasswords,
     int passwordLength
 ) {
 
     if (sodium_init() < 0) {
-        fprintf(stderr, "Error initializing sodium library\n");
+        fprintf(stderr, "[!] Error initializing sodium library");
         return 1;
     }
 
     randombytes_stir();
 
-    printf("number of passwords?: ");
+    char buffer[30];
+
+    sprintf(buffer, "[!] Your seed is: %d\n\n", randombytes_stir);
+    printf(buffer);
+
+    printf("[*] Welcome to undefinedPasswordGenerator!\n");
+    printf("[*] A secure password generator.\n\n");
+
+    printf("[~] Number of passwords?: ");
     scanf("%d", &numPasswords);
 
-    printf("length of passwords?: ");
+    printf("[~] Length of passwords?: ");
     scanf("%d", &passwordLength);
 
     if (numPasswords <= 0 || passwordLength <= 0) {
-        fprintf(stderr, "Please provide a valid number of passwords and password length.\n");
+        fprintf(stderr, "[?] Please provide a valid number of passwords and password length.\n");
         return 1;
     }
 
