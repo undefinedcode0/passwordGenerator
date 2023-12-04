@@ -2,7 +2,7 @@
 
 # YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS OVER 5 
 
-## I'll try to include libsodium here
+## I'll try to include libsodium here and possibly a batch script to copy it for you.
 
 ## A powerful password generator.
 ### It basically takes some letters from a list and randomizes them. 
@@ -15,7 +15,7 @@
 # LIBSODIUM Install
 * Libsodium can be downloaded from https://download.libsodium.org/libsodium/releases/
 
-## For eg. https://download.libsodium.org/libsodium/releases/libsodium-1.0.17-msvc.zip
+## For eg. https://download.libsodium.org/libsodium/releases/libsodium-1.0.19-msvc.zip
 
 * Extract the files from the zip file
 
