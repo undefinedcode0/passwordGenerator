@@ -2,21 +2,20 @@
 
 # YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS OVER 5 
 
-## I'll try to include libsodium here
+## I'll try to include libsodium here and possibly a batch script to copy it for you.
 
 ## A powerful password generator.
 ### It basically takes some letters from a list and randomizes them. 
 ### But it first takes the first and second argument inputted by the user to determine the amount of passwords generated and length., and it has a chance to capatilize the letter or not. After this it will print the final result.
 
-* Usage: : <numPasswords> <passwordLength>
-* Example : " passwordGenerator.exe 30 50 " OR "passwordGenerator account OR email
+### The program now takes input by the user a few builds ago.
 
 ## The recommended length for a password is 50 or more.
 ## Adjust the length as you need.
 # LIBSODIUM Install
 * Libsodium can be downloaded from https://download.libsodium.org/libsodium/releases/
 
-## For eg. https://download.libsodium.org/libsodium/releases/libsodium-1.0.17-msvc.zip
+## For eg. https://download.libsodium.org/libsodium/releases/libsodium-1.0.19-msvc.zip
 
 * Extract the files from the zip file
 
