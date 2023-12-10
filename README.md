@@ -1,6 +1,6 @@
 # passwordGenerator
 
-# YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS OVER 5 
+# YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS under 10 
 
 ## I'll try to include libsodium here and possibly a batch script to copy it for you.
 
