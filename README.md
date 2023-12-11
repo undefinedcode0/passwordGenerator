@@ -11,6 +11,7 @@
 ### The program now takes input by the user a few builds ago.
 
 ## The recommended length for a password is 50 or more.
+### Generating long passwords yields to the program hanging.
 ## Adjust the length as you need.
 # LIBSODIUM Install
 * Libsodium can be downloaded from https://download.libsodium.org/libsodium/releases/
