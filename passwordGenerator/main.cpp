@@ -1,28 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <algorithm>
 #include <random>
-#include <chrono>
-#include <memory>
-#define PERCENT 95
 
 using namespace std;
 
 char generateRandomCharacter() {
-    const string alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$&*";
+    const string alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%";
 
     random_device rd;
     mt19937 gen(rd());
-    uniform_real_distribution<double> dis(0.0, 1.0);
+    uniform_int_distribution<int> dis(0, alphanumeric.size() - 1);
 
-    double randomValue = dis(gen) * 100.0;
-
-    if (randomValue < PERCENT) {
-        return alphanumeric[rand() % alphanumeric.size()];
-    }
-
-    return generateRandomCharacter();
+    return alphanumeric[dis(gen)];
 }
 
 void generateAndSavePasswords(int numPasswords, int passwordLength) {
@@ -35,7 +25,7 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
     for (int passwordIndex = 1; passwordIndex <= numPasswords; ++passwordIndex) {
         file << passwordIndex << ": ";
 
-        vector<char> usedCharacters(256, 0);
+        vector<char> usedCharacters;
         int previousCase = 0;
 
         for (int charIndex = 0; charIndex < passwordLength; ++charIndex) {
@@ -43,17 +33,11 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 
             do {
                 randomChar = generateRandomCharacter();
-            } while (usedCharacters[tolower(static_cast<unsigned char>(randomChar))] ||
-                (charIndex > 0 && randomChar == usedCharacters[charIndex - 1]) ||
-                (charIndex > 1 && randomChar == usedCharacters[charIndex - 2]));
-
-            while ((isupper(randomChar) && previousCase == 1) || (islower(randomChar) && previousCase == 2)) {
-                randomChar = generateRandomCharacter();
-            }
+            } while (find(usedCharacters.begin(), usedCharacters.end(), randomChar) != usedCharacters.end());
 
             file.put(randomChar);
+            usedCharacters.push_back(randomChar);
 
-            usedCharacters[tolower(static_cast<unsigned char>(randomChar))] = randomChar;
             previousCase = isalpha(randomChar) ? (isupper(randomChar) ? 1 : 2) : 0;
         }
 
@@ -70,10 +54,6 @@ void generateAndSavePasswords(int numPasswords, int passwordLength) {
 }
 
 int main() {
-
-
-    srand(time(0));
-
     cout << "[*] Welcome to PasswordGenerator!\n";
     cout << "[*] A secure password generator.\n\n";
 
