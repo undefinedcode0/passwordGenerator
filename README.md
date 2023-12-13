@@ -1,6 +1,6 @@
 # passwordGenerator
 
-# YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS OVER 5 
+# YOU'LL NEED LIBSODIUM INSTALLED ON YOUR COMPUTER FOR BUILDS under 10 
 
 ## I'll try to include libsodium here and possibly a batch script to copy it for you.
 
@@ -11,6 +11,7 @@
 ### The program now takes input by the user a few builds ago.
 
 ## The recommended length for a password is 50 or more.
+### Generating long passwords yields to the program hanging.
 ## Adjust the length as you need.
 # LIBSODIUM Install
 * Libsodium can be downloaded from https://download.libsodium.org/libsodium/releases/
