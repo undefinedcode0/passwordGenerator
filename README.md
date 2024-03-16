@@ -5,8 +5,8 @@
 ## I'll include libsodium here and possibly a batch script to copy it for you.
 
 ## A powerful password generator.
-# # # It takes some letters from a list and randomizes them. 
-### But it first takes the first and second arguments inputted by the user to determine the number of passwords generated and length. it has a chance to capitalize the letter or not. After this, it will print the final result.
+### It takes some letters from a list and randomizes them. 
+### But it first takes the first and second arguments the user inputs to determine the number of passwords generated and length. it has a chance to capitalize the letter or not. After this, it will print the final result.
 
 ### The program now takes input from the user a few builds ago.
 
