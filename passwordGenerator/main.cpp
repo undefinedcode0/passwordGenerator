@@ -1,23 +1,104 @@
-#include "functions.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <random>
+#include <algorithm>
 
-int main() {
-    cout << "[*] Welcome to PasswordGenerator!\n";
-    cout << "[*] A secure password generator.\n\n";
+std::string GeneratePassword(int length) 
+{
+    const std::string characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "0123456789"
+        "!@#$%_-?.";
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<> distribution(0, characters.size() - 1);
 
-    int numPasswords, passwordLength;
+    std::string password;
+    for (int i = 0; i < length; ++i) 
+    {
+        password += characters[distribution(generator)];
+    }
+    return password;
+}
 
-    cout << "[~] Number of passwords?: ";
-    cin >> numPasswords;
+std::vector<std::string> GeneratePasswords(int num_passwords, int length) 
+{
+    std::vector<std::string> passwords;
+    for (int i = 0; i < num_passwords; ++i) 
+    {
+        passwords.push_back(GeneratePassword(length));
+    }
+    return passwords;
+}
 
-    cout << "[~] Length of passwords?: ";
-    cin >> passwordLength;
+void PrintPasswords(const std::vector<std::string>& passwords) 
+{
+    for (int i = 0; i < passwords.size(); ++i) 
+    {
+        std::cout << (i + 1) << ": " << passwords[i] << std::endl;
+    }
+}
 
-    if (numPasswords <= 0 || passwordLength <= 0) {
-        cerr << "[?] Please provide a valid number of passwords and password length.\n";
-        return 1;
+void SavePasswordsToFile(const std::vector<std::string>& passwords, const std::string& filename) 
+{
+    std::ofstream file(filename);
+    if (file.is_open()) 
+    {
+        for (int i = 0; i < passwords.size(); ++i) 
+        {
+            file << (i + 1) << ": " << passwords[i] << std::endl;
+        }
+        file.close();
+        std::cout << "[+] Passwords saved to " << filename << std::endl;
+    }
+    else 
+    {
+        std::cerr << "[!] Unable to open file: " << filename << std::endl;
+    }
+}
+
+void GetUserInput(int& num_passwords, int& length) 
+{
+    std::cout << "[+] Enter the number of passwords to generate: ";
+    while (!(std::cin >> num_passwords) || num_passwords < 0) 
+    {
+        std::cerr << "[+] Please enter a non-negative number." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Enter the number of passwords to generate: ";
     }
 
-    generateAndSavePasswords(numPasswords, passwordLength);
+    std::cout << "[+] Enter the length of the passwords: ";
+    while (!(std::cin >> length) || length <= 0) 
+    {
+        std::cerr << "[+] Please enter a positive number." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "[+] Enter the length of the passwords: ";
+    }
+}
+
+int main() 
+{
+    int num_passwords, length;
+    GetUserInput(num_passwords, length);
+
+    auto passwords = GeneratePasswords(num_passwords, length);
+    PrintPasswords(passwords);
+
+    std::cout << "[+] Do you want to save the passwords to a file? (y/n): ";
+    std::string save_choice;
+    std::cin >> save_choice;
+    if (save_choice == "y" || save_choice == "Y") 
+    {
+        std::cout << "[+] Enter the filename: ";
+        std::string filename;
+        std::cin >> filename;
+        SavePasswordsToFile(passwords, filename);
+    }
 
     return 0;
 }
