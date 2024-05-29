@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /passwordGenerator/passwords.txt
 /passwordGenerator/passwords.txt
+/passwordGenerator/passwords.xat
